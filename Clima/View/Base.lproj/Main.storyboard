@@ -66,27 +66,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Ph-Pc-lhI" userLabel="Container View">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="224"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ph-Pc-lhI" userLabel="Container View">
+                                <rect key="frame" x="0.0" y="0.0" width="415" height="224"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter City Name Here" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MKK-4i-rVS" userLabel="City Name Text Field">
-                                        <rect key="frame" x="95" y="136" width="224" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter City Name Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MKK-4i-rVS" userLabel="City Name Text Field">
+                                        <rect key="frame" x="127" y="136" width="161" height="30"/>
                                         <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="left" translatesAutoresizingMaskIntoConstraints="NO" id="DtV-MN-yGi" userLabel="Back Button">
-                                        <rect key="frame" x="32" y="68" width="32" height="32"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="32" id="FaQ-dK-4Hs"/>
-                                            <constraint firstAttribute="height" constant="32" id="ela-gL-nrN"/>
-                                        </constraints>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ6-dX-aia" userLabel="Get Weather Button">
-                                        <rect key="frame" x="8" y="186" width="398" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ6-dX-aia" userLabel="Get Weather Button">
+                                        <rect key="frame" x="57" y="186" width="300" height="30"/>
                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="7Xc-4b-9H8"/>
+                                            <constraint firstAttribute="width" constant="300" id="Bpo-AK-5Ba"/>
+                                        </constraints>
                                         <state key="normal" title="GET WEATHER">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -94,16 +89,34 @@
                                             <action selector="getWeatherPressed:" destination="8qs-TE-rn1" eventType="touchUpInside" id="R0t-ik-stq"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PZL-CK-O6s" userLabel="Back Button">
+                                        <rect key="frame" x="24" y="68" width="32" height="32"/>
+                                        <state key="normal" image="left"/>
+                                        <connections>
+                                            <action selector="backButtonPressed:" destination="8qs-TE-rn1" eventType="touchUpInside" id="YUU-a8-rVl"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.94509803920000002" green="0.64313725489999995" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="224" id="M4B-zp-Roa"/>
-                                    <constraint firstItem="DtV-MN-yGi" firstAttribute="top" secondItem="9Ph-Pc-lhI" secondAttribute="topMargin" constant="16" id="PPz-oO-xkJ"/>
-                                    <constraint firstItem="DtV-MN-yGi" firstAttribute="leading" secondItem="9Ph-Pc-lhI" secondAttribute="leading" constant="32" id="TfS-u6-VBF"/>
+                                    <constraint firstItem="yQ6-dX-aia" firstAttribute="top" secondItem="MKK-4i-rVS" secondAttribute="bottom" constant="20" id="1qY-EY-kSh"/>
+                                    <constraint firstAttribute="height" constant="224" id="5jW-vL-uyo"/>
+                                    <constraint firstItem="yQ6-dX-aia" firstAttribute="top" secondItem="MKK-4i-rVS" secondAttribute="bottom" constant="20" id="BlI-wj-aaW"/>
+                                    <constraint firstItem="yQ6-dX-aia" firstAttribute="leading" secondItem="9Ph-Pc-lhI" secondAttribute="leading" constant="57" id="Dgl-f0-KX0"/>
+                                    <constraint firstItem="MKK-4i-rVS" firstAttribute="top" secondItem="9Ph-Pc-lhI" secondAttribute="top" constant="136" id="OcY-dc-7HT"/>
+                                    <constraint firstItem="PZL-CK-O6s" firstAttribute="top" secondItem="9Ph-Pc-lhI" secondAttribute="topMargin" constant="16" id="QYA-5W-eND"/>
+                                    <constraint firstItem="PZL-CK-O6s" firstAttribute="leading" secondItem="9Ph-Pc-lhI" secondAttribute="leadingMargin" constant="16" id="d4u-Eo-tjl"/>
+                                    <constraint firstAttribute="trailing" secondItem="MKK-4i-rVS" secondAttribute="trailing" constant="127" id="ixh-2I-opQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="yQ6-dX-aia" secondAttribute="trailing" constant="55" id="sFM-2U-RAN"/>
+                                    <constraint firstItem="MKK-4i-rVS" firstAttribute="leading" secondItem="9Ph-Pc-lhI" secondAttribute="leading" constant="127" id="sfQ-xJ-PU6"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.49327188729999999" blue="0.47399842739999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9Ph-Pc-lhI" firstAttribute="trailing" secondItem="j8j-Qv-NSm" secondAttribute="trailing" id="jcR-Z8-JZI"/>
+                            <constraint firstItem="9Ph-Pc-lhI" firstAttribute="top" secondItem="eAf-Rm-Po9" secondAttribute="top" id="mR9-ax-7r4"/>
+                            <constraint firstItem="9Ph-Pc-lhI" firstAttribute="leading" secondItem="j8j-Qv-NSm" secondAttribute="leading" id="zFg-Jg-FnC"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="j8j-Qv-NSm"/>
                     </view>
                     <connections>

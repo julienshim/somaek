@@ -17,9 +17,7 @@ class ChangeCityViewController: UIViewController {
         
     }
     
-    
-    @IBOutlet weak var backButtonPressed: UIImageView!
-    @IBAction func backButtonPressed(_ sender: AnyObject) {
+    @IBAction func backButtonPressed(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
