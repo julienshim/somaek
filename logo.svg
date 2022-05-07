@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 8268 8268" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Somaek" transform="matrix(1,0,0,1,-879.845,-1524.1)">
+        <g id="Soju" transform="matrix(1,0,0,1,-686,-1464.77)">
+            <path d="M3810,9551.65L3320,9551.65C3064.63,9537.03 2942.68,9479.41 2938,9384C2921.56,9301.76 2919.92,9118.06 2923,8902L2919,6796C2901.07,6583.64 2934.53,6371.6 3039,6160C3126.49,5982.8 3344.23,5690.01 3368,5298L3370,4650C3333.41,4571.04 3354.22,4512.11 3462,4491.65L3688,4491.65" style="fill:rgb(209,239,254);stroke:black;stroke-width:41.67px;"/>
+            <g transform="matrix(-1,0,0,1,7376,0)">
+                <path d="M3775,9551.65L3320,9551.65C3064.63,9537.03 2942.68,9479.41 2938,9384C2921.56,9301.76 2919.92,9118.06 2923,8902L2919,6796C2901.07,6583.64 2934.53,6371.6 3039,6160C3132.41,5970.8 3344.23,5690.01 3368,5298L3370,4650C3333.41,4571.04 3354.22,4512.11 3462,4491.65L3688,4491.65" style="fill:rgb(209,239,254);stroke:black;stroke-width:41.67px;"/>
+            </g>
+            <g transform="matrix(0.992029,0,0,1,45.2682,0)">
+                <rect x="2919.12" y="6861.68" width="1505.47" height="2076.41" style="fill:rgb(72,194,236);"/>
+            </g>
+            <g id="Layer1">
+            </g>
+            <path d="M3517,9551.65L3881,9551.65" style="fill:none;stroke:black;stroke-width:41.67px;"/>
+            <g>
+                <g transform="matrix(0.976013,5.72752e-05,5.72752e-05,1,69.6292,-0.166255)">
+                    <path d="M2919.12,6861.68L4461.59,6858" style="fill:none;stroke:black;stroke-width:42.17px;stroke-linecap:square;"/>
+                </g>
+                <g transform="matrix(0.976013,5.72752e-05,5.72752e-05,1,69.6292,2079.83)">
+                    <path d="M2959.08,6865.68L4461.59,6858" style="fill:none;stroke:black;stroke-width:42.17px;stroke-linecap:square;"/>
+                </g>
+            </g>
+            <g transform="matrix(1,0,0,1,-334,-159)">
+                <circle cx="4022" cy="8066" r="671" style="fill:white;stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,67.6165,297.753)">
+                <text x="3321.24px" y="7729.6px" style="font-family:'AppleSDGothicNeo-Bold', 'Apple SD Gothic Neo';font-weight:700;font-size:345.833px;">소주</text>
+            </g>
+        </g>
+        <g id="Maekju" transform="matrix(1,0,0,1,1088,-1464.77)">
+            <path d="M5994,3330.65L5748,3332C5630.69,3346.16 5585.64,3413.19 5625,3542L5526,4717C5484.18,5163.54 5474.62,5446.8 5382,5630C5153.56,5928.37 5079.34,6208.59 5097,6478L5113,8893C5108.64,9206.79 5120.65,9415.77 5164,9424C5221.41,9508.06 5341.26,9549.82 5474,9551.65L6025,9551.65" style="fill:rgb(44,176,87);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            <g transform="matrix(-1,0,0,1,11805.5,-0.346457)">
+                <path d="M6000,3331L5780.51,3331.35C5663.2,3345.5 5585.64,3413.19 5625,3542L5526,4717C5484.18,5163.54 5474.62,5446.8 5382,5630C5153.56,5928.37 5079.34,6208.59 5097,6478L5113,8893C5108.64,9206.79 5120.65,9415.77 5164,9424C5221.41,9508.06 5346.26,9550.16 5479,9552L6188,9552" style="fill:rgb(44,176,87);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,11819.1,9.09495e-13)">
+                <path d="M5902.75,6623C6258.85,6625.94 6543.04,6792.11 6616,6975L6599,8243C6563.46,8510.41 6455.08,8674.06 6302,8774C6186.92,8849.14 6044.21,8913.23 5905.13,8901.79" style="fill:rgb(6,98,64);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            </g>
+            <path d="M5902.75,6623C6258.85,6625.94 6543.04,6792.11 6616,6975L6599,8243C6563.46,8510.41 6455.08,8674.06 6302,8774C6186.92,8849.14 6000.46,8914.23 5874.38,8901.79" style="fill:rgb(6,98,64);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            <path d="M5305,7195L6523,7190L5902.75,8389L5305,7195Z" style="fill:rgb(237,255,17);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+            <g transform="matrix(1,0,0,1,2287.74,-113.111)">
+                <text x="3321.24px" y="7729.6px" style="font-family:'AppleSDGothicNeo-Bold', 'Apple SD Gothic Neo';font-weight:700;font-size:345.833px;">맥주</text>
+            </g>
+        </g>
+        <g id="Layer2" transform="matrix(1,0,0,1,0,-2055.12)">
+            <path d="M4186,8275C4095.32,8611.86 4172.82,8804.77 4240,8924C4318.22,9062.83 4437.75,9150.45 4576,9209C4720.51,9278.61 4887.04,9293.78 5022,9290C5281.47,9282.73 5437.74,9193.57 5549,9042C5670.27,8891.5 5787.24,8724.88 5888,8497.35C5934.35,8410.85 5944.92,8342.15 5865,8277C5771.19,8218.37 5660.28,8217.62 5591,8305L5492,8468L5722,8107C5770.5,8022.5 5785.42,7940.77 5680,7869C5579.16,7832.92 5487.94,7842.16 5410,7914L5207,8204.29L5410,7914C5520.78,7804.68 5525.79,7722.77 5415,7645C5318.18,7577.03 5152,7614.19 5096,7687L4897,7986L5369,7305C5403.32,7259.41 5387.05,7171.02 5301,7126C5197.25,7071.73 5132.95,7085.97 5072,7133L4429,8020L4931.61,7326.66C4882.07,7222.66 4803.05,7143.91 4653,7126C4530.03,7140.86 4511.2,7194.96 4532,7264C4603.45,7431.26 4579.05,7584.11 4515,7731C4409.42,7944.16 4240.27,8073.4 4186,8275Z" style="fill:rgb(253,215,85);stroke:black;stroke-width:41.67px;stroke-linecap:square;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,0,-2055.12)">
+            <g transform="matrix(1,0,0,1,0,2055.12)">
+                <path d="M4966.53,3871C4898.25,3777.57 4807.41,3718.17 4676,3720C4455.78,3723.06 4403.8,3961.18 4452,4131C4502.15,4255.56 4575.78,4365.4 4677,4445L4966.53,4695" style="fill:rgb(255,40,0);stroke:black;stroke-width:41.67px;"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,9938.07,2055.12)">
+                <path d="M4972.53,3871.57C4904.25,3778.14 4807.41,3718.17 4676,3720C4455.78,3723.06 4403.8,3961.18 4452,4131C4502.15,4255.56 4575.78,4365.4 4677,4445L4972.53,4695" style="fill:rgb(255,40,0);stroke:black;stroke-width:41.67px;"/>
+            </g>
+        </g>
+        <g transform="matrix(1,0,0,1,3039.56,717.846)">
+            <text x="-192.28px" y="8686.36px" style="font-family:'HiraKakuStd-W8', 'Hiragino Kaku Gothic Std', sans-serif;font-weight:800;font-size:833.333px;">s<tspan x="460.22px 1163.55px 2183.55px 2875.22px 3556.05px " y="8686.36px 8686.36px 8686.36px 8686.36px 8686.36px ">omaek</tspan></text>
+        </g>
+    </g>
+</svg>
