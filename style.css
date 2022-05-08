@@ -1,0 +1,24 @@
+h1 {
+    margin: 20px 0;
+}
+
+h2.section-header {
+    color: grey;
+    margin: 20px 0;
+}
+
+img.logo {
+    height: 200px;
+    display: block;
+    margin: 20px auto;
+    width: 50%;
+}
+
+.accordion-button:not(.collapsed) {
+    color: inherit;
+    background-color: inherit;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 .25rem rgba(0,0,0,.125);
+}
