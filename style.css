@@ -1,19 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Josefin+Sans:wght@100;400;700&display=swap');
 
 body {
-    font-family: 'Josefin Sans', sans-serif;
-}
-
-body {
     background-color: #F7FFF6;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 h1 {
     margin: 20px 0;
-}
-
-.accordion-header > button {
-    background-color: #F5F5F5
 }
 
 h2.section-header {
