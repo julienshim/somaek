@@ -160,8 +160,8 @@ const getPlayersAccordionHTML = () => {
                 <div class="accordion-body">
                     <h5>All-Time Statistics</h5>
                     <ul>
-                        <li>Guess Average: ${player.getAverageGuessAllTime()}</li>
-                        <li>Win Percentage: ${player.getWinPercentage()}%</li>
+                        <li>Guess Average: ${String(player.getAverageGuessAllTime()).includes('.') ? player.getAverageGuessAllTime().toFixed(2) : player.getAverageGuessAllTime()}</li>
+                        <li>Win Percentage: ${String(player.getWinPercentage()).includes('.') ? player.getWinPercentage().toFixed(2): player.getWinPercentage()}%</li>
                         <li>Current Streak: ${player.getCurrentStreak()}</li>
                         <li>Max Streak: ${player.getMaxStreak()}</li>
                     </ul>
@@ -183,36 +183,40 @@ const getUseLessStatsHTML = () => {
     .sort((a, b) => b.getNumberOfFirstAttemptGreenBoxes() - a.getNumberOfFirstAttemptGreenBoxes())
     .filter((player, index, arr) => player.getNumberOfFirstAttemptGreenBoxes() === arr[0].getNumberOfFirstAttemptGreenBoxes())
     .map(player => [player.name, player.getNumberOfFirstAttemptGreenBoxes()]),
-    "Psychic");
+    "Psychic",
+    "green squares found in first guesses");
   const lastWeekWinner = getLeadersHTML(players
     .sort((a, b) => a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek))
     .filter((player, index, arr) => player.getAverageGuessByWeek() === arr[0].getAverageGuessByWeek())
     .map(player => [player.name, player.getAverageGuessByWeek()]),
-    "Last Week's Winner");
+    "Last Week's Winner",
+    "average guesses");
   const mostMisses = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfMisses() - a.getNumberOfMisses())
     .filter((player, index, arr) => player.getNumberOfMisses() === arr[0].getNumberOfMisses())
     .map(player => [player.name, player.getNumberOfMisses()]),
-    "Most Misses");
+    "Most Misses",
+    "times couldn't catch any letters in a guess");
   const earlyBird = getLeadersHTML(players
     .sort((a, b) => b.getEarlyBirdCount() - a.getEarlyBirdCount())
     .filter((player, index, arr) => player.getEarlyBirdCount() === arr[0].getEarlyBirdCount())
     .map(player => [player.name, player.getEarlyBirdCount()]),
-    "Early Bird");
+    "Early Bird",
+    "times first to post");
   const fashionablyLate = getLeadersHTML(players
     .sort((a, b) => b.getFashionablyLateCount() - a.getFashionablyLateCount())
     .filter((player, index, arr) => player.getFashionablyLateCount() === arr[0].getFashionablyLateCount())
     .map(player => [player.name, player.getFashionablyLateCount()]),
-    "Fashionably Late");
+    "Fashionably Late",
+    "times last to post");
 
   return [psychic, lastWeekWinner, mostMisses, earlyBird, fashionablyLate].join("");
 };
 
-const getLeadersHTML = (sortedAndFilteredArr, header) => {
-  console.log(sortedAndFilteredArr)
+const getLeadersHTML = (sortedAndFilteredArr, header, subHeader) => {
   return `<div>
             <h5>${header}</h5>
-            ${sortedAndFilteredArr.map(([name, value]) => `<p>${name.toUpperCase()} - ${String(value).includes('.') ? value.toFixed(2) : value}</p>`).join("")}
+            ${sortedAndFilteredArr.map(([name, value]) => `<p>${name.toUpperCase()} - ${String(value).includes('.') ? value.toFixed(2) : value} ${subHeader}</p>`).join("")}
           </div>`;
 }
 
