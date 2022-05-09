@@ -56,3 +56,9 @@ img.logo {
     padding: 30px 20px;
     text-align: center;
 }
+
+footer > p {
+    color: #8491A3;
+    text-align: center;
+    margin: 30px 20px;
+}
