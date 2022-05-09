@@ -184,7 +184,7 @@ const getUseLessStatsHTML = () => {
     .filter((player, index, arr) => player.getNumberOfFirstAttemptGreenBoxes() === arr[0].getNumberOfFirstAttemptGreenBoxes())
     .map(player => [player.name, player.getNumberOfFirstAttemptGreenBoxes()]),
     "Psychic",
-    "green squares found in first guesses");
+    "green squares found with first guesses");
   const lastWeekWinner = getLeadersHTML(players
     .sort((a, b) => a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek))
     .filter((player, index, arr) => player.getAverageGuessByWeek() === arr[0].getAverageGuessByWeek())
