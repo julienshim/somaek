@@ -137,6 +137,7 @@ const displayPlayers = () => {
 const getPlayersAccordionHTML = () => {
   const weekNumber = document.getElementById("weekNumber");
   const currentWeek = Math.ceil(data.answers.length / 7);
+  const rankNumbers = players.map(player => player.getAverageGuessByWeek(currentWeek));
   weekNumber.innerText = currentWeek;
 
   return players
@@ -146,15 +147,18 @@ const getPlayersAccordionHTML = () => {
         b.getAverageGuessByWeek(currentWeek)
     )
     .map((player, index) => {
+      const playerRank = rankNumbers.indexOf(player.getAverageGuessByWeek(currentWeek)) + 1;
+      const tiePreFix = rankNumbers.filter(rank => rank === player.getAverageGuessByWeek(currentWeek)).length > 1 ? 'T' : '';
+      console.log(tiePreFix)
       return `<div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
-            ${player.name.toUpperCase()} - ${player.getAverageGuessByWeek(
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
+            ${tiePreFix}${playerRank}. ${player.name.toUpperCase()} (${player.getAverageGuessByWeek(
         currentWeek
-      )}
+      )})
             </button>
             </h2>
-            <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}">
+            <div id="collapse${index}" class="accordion-collapse collapse show" aria-labelledby="heading${index}">
                 <div class="accordion-body">
                     <h5>All-Time Statistics</h5>
                     <ul>
