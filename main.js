@@ -190,7 +190,7 @@ const getUseLessStatsHTML = () => {
     .filter((player, index, arr) => player.getAverageGuessByWeek() === arr[0].getAverageGuessByWeek())
     .map(player => [player.name, player.getAverageGuessByWeek()]),
     "Last Week's Winner",
-    "average guesses");
+    "guess average");
   const mostMisses = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfMisses() - a.getNumberOfMisses())
     .filter((player, index, arr) => player.getNumberOfMisses() === arr[0].getNumberOfMisses())
