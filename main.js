@@ -51,11 +51,13 @@ class Player {
     return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
   }
   getAverageGuessByWeek(weekNumber) {
+    const start = (weekNumber - 1) * 7;
+    const end = start + 7;
     const totalGuesses = this.results
-      .slice((weekNumber - 1) * 7)
+      .slice(start, end)
       .map((result) => (result.score === "X" ? 7 : +result.score))
       .reduce((acc, cur) => acc + cur, 0);
-    const totalPlayed = this.results.slice((weekNumber - 1) * 7).length;
+    const totalPlayed = this.results.slice(start, end).length;
     return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
   }
   getWinPercentage() {
@@ -149,7 +151,6 @@ const getPlayersAccordionHTML = () => {
     .map((player, index) => {
       const playerRank = rankNumbers.indexOf(player.getAverageGuessByWeek(currentWeek)) + 1;
       const tiePreFix = rankNumbers.filter(rank => rank === player.getAverageGuessByWeek(currentWeek)).length > 1 ? 'T' : '';
-      console.log(tiePreFix)
       return `<div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
@@ -181,6 +182,7 @@ const displayUselessStats = () => {
 
 const getUseLessStatsHTML = () => {
   const lastWeek = Math.ceil(data.answers.length / 7) - 1;
+  console.log(lastWeek, "lastWeek")
   const psychic = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfFirstAttemptGreenBoxes() - a.getNumberOfFirstAttemptGreenBoxes())
     .filter((player, index, arr) => player.getNumberOfFirstAttemptGreenBoxes() === arr[0].getNumberOfFirstAttemptGreenBoxes())
@@ -189,10 +191,11 @@ const getUseLessStatsHTML = () => {
     "green squares found with first guesses");
   const lastWeekWinner = getLeadersHTML(players
     .sort((a, b) => a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek))
-    .filter((player, index, arr) => player.getAverageGuessByWeek() === arr[0].getAverageGuessByWeek())
-    .map(player => [player.name, player.getAverageGuessByWeek()]),
+    .filter((player, index, arr) => player.getAverageGuessByWeek(lastWeek) === arr[0].getAverageGuessByWeek(lastWeek))
+    .map(player => [player.name, player.getAverageGuessByWeek(lastWeek)]),
     "Last Week's Winner",
     "guess average");
+    console.log(players.sort((a, b) => a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek)).map(player => [player.name, player.getAverageGuessByWeek(lastWeek), player.getAverageGuessAllTime()])    )
   const mostMisses = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfMisses() - a.getNumberOfMisses())
     .filter((player, index, arr) => player.getNumberOfMisses() === arr[0].getNumberOfMisses())
