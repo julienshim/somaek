@@ -1,10 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Josefin+Sans:wght@100;400;700&display=swap');
+
+body {
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+body {
+    background-color: #F7FFF6;
+}
+
 h1 {
     margin: 20px 0;
 }
 
+.accordion-header > button {
+    color: #8491A3;
+}
+
 h2.section-header {
-    color: grey;
+    color: #8491A3;
     margin: 20px 0;
+    font-family: 'Amatic SC', cursive !important;
+    font-weight: 700;
+}
+
+h5 {
+    /* font-family: 'Amatic SC', cursive !important; */
+    font-weight: 700;
 }
 
 img.logo {
@@ -15,10 +36,23 @@ img.logo {
 }
 
 .accordion-button:not(.collapsed) {
-    color: inherit;
-    background-color: inherit;
+    color: #F7FFF6;
+    /* background-color: #93B48B; */
+    background-color: #4E6E5D;
+}
+
+.accordion-button:not(.collapsed):after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }
 
 .accordion-button:focus {
+    /* border-color: #F7FFF6 !important; */
     box-shadow: 0 0 0 .25rem rgba(0,0,0,.125);
+}
+
+.useless-stats {
+    background-color:#F5F5F5;
+    border: 1px solid rgba(0,0,0,.125);
+    padding: 30px 20px;
+    text-align: center;
 }

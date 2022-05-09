@@ -95,8 +95,6 @@ class Player {
     const test = this.results
       .filter((result) => result.attempts !== null)
       .map((result) => result.attempts.split(" ")[0].split(""));
-    console.log(this.results);
-    console.log(test);
     const firstAttempGreenBoxesCountArr = this.results
       .filter((result) => result.attempts !== null)
       .map(
