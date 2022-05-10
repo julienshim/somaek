@@ -3,7 +3,7 @@ class Player {
     this.name = name;
     this.answers = answers;
     this.hasPlayed = results.length > 0;
-    this.results = this.getTrueResults(results);
+    this.results = this.getTrueResults(this.getExpandedObjectResults(results));
   }
   getEarlyBirdCount() {
     return this.results
@@ -14,6 +14,21 @@ class Player {
     return this.results
       .map((result) => result.postOrder)
       .filter((postOrder) => postOrder === "5").length;
+  }
+  getExpandedObjectResults(results) {
+    if (results.length) {
+      return results.map(result => {
+        const {results, postOrder} = result;
+        const resultsArr = results.split(' ');
+        const expandedResults  = {
+          id: resultsArr[1],
+          score: resultsArr[2].split('/')[0],
+          attempts: resultsArr.slice(3).join(' ')
+        };
+        return ({...expandedResults, postOrder});
+      })
+    }
+    return [];
   }
   getTrueResults(results) {
     const resultsIds = results.map((result) => result.id);
@@ -139,7 +154,7 @@ const displayPlayers = () => {
 const getPlayersAccordionHTML = () => {
   const weekNumber = document.getElementById("weekNumber");
   const currentWeek = Math.ceil(data.answers.length / 7);
-  const rankNumbers = players.map(player => player.getAverageGuessByWeek(currentWeek));
+  const rankNumbers = players.map(player => player.getAverageGuessByWeek(currentWeek)).sort((a, b) => a-b);
   weekNumber.innerText = currentWeek;
 
   return players
@@ -154,7 +169,11 @@ const getPlayersAccordionHTML = () => {
       return `<div class="accordion-item">
             <h2 class="accordion-header" id="heading${index}">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">
-            ${tiePreFix}${playerRank}. ${player.name.toUpperCase()} (${player.getAverageGuessByWeek(
+            ${tiePreFix}${playerRank}. ${player.name.toUpperCase()} (${String(player.getAverageGuessByWeek(
+        currentWeek
+      )).includes('.') ? player.getAverageGuessByWeek(
+        currentWeek
+      ).toFixed(2) : player.getAverageGuessByWeek(
         currentWeek
       )})
             </button>
@@ -182,7 +201,6 @@ const displayUselessStats = () => {
 
 const getUseLessStatsHTML = () => {
   const lastWeek = Math.ceil(data.answers.length / 7) - 1;
-  console.log(lastWeek, "lastWeek")
   const psychic = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfFirstAttemptGreenBoxes() - a.getNumberOfFirstAttemptGreenBoxes())
     .filter((player, index, arr) => player.getNumberOfFirstAttemptGreenBoxes() === arr[0].getNumberOfFirstAttemptGreenBoxes())
@@ -195,7 +213,6 @@ const getUseLessStatsHTML = () => {
     .map(player => [player.name, player.getAverageGuessByWeek(lastWeek)]),
     "Last Week's Winner",
     "guess average");
-    console.log(players.sort((a, b) => a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek)).map(player => [player.name, player.getAverageGuessByWeek(lastWeek), player.getAverageGuessAllTime()])    )
   const mostMisses = getLeadersHTML(players
     .sort((a, b) => b.getNumberOfMisses() - a.getNumberOfMisses())
     .filter((player, index, arr) => player.getNumberOfMisses() === arr[0].getNumberOfMisses())
@@ -237,6 +254,13 @@ const fetchJSONData = async (targetJSONFilename) => {
   }
 };
 
+const lastUpdateUpdated = () => {
+  const recentGame = data.answers[data.answers.length - 1];
+  const lastUpdatedDate = new Date(recentGame.date).toDateString();
+  const lastUpdatedParagraph = document.getElementById('lastUpdated');
+  lastUpdatedParagraph.innerText = `Last Update: ${lastUpdatedDate} (Wordle ${recentGame.id})`;
+}
+
 fetchJSONData("somaek")
   .then((res) => {
     data = res;
@@ -244,4 +268,5 @@ fetchJSONData("somaek")
   .then(loadPlayers)
   .then(displayPlayers)
   .then(displayUselessStats)
+  .then(lastUpdateUpdated)
   .catch((error) => console.log(error));
