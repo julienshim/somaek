@@ -109,9 +109,6 @@ class Player {
     return this.hasPlayed ? max : 0;
   }
   getNumberOfFirstAttemptGreenBoxes() {
-    const test = this.results
-      .filter((result) => result.attempts !== null)
-      .map((result) => result.attempts.split(" ")[0].split(""));
     const firstAttempGreenBoxesCountArr = this.results
       .filter((result) => result.attempts !== null)
       .map(
