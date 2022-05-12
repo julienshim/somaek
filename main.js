@@ -3,60 +3,29 @@ class Player {
     this.name = name;
     this.answers = answers;
     this.hasPlayed = results.length > 0;
-    this.results = this.getTrueResults(this.getExpandedObjectResults(results));
+    this.results = this.getExpandedResultsObject(results);
   }
   getEarlyBirdCount() {
-    return this.results
-      .map((result) => result.postOrder)
-      .filter((postOrder) => postOrder === "1").length;
+    return this.results.filter(result => result.postOrder === "1").length;
   }
-  getFashionablyLateCount() {
-    return this.results
-      .map((result) => result.postOrder)
-      .filter((postOrder) => postOrder === "5").length;
-  }
-  getExpandedObjectResults(results) {
+  getExpandedResultsObject(results) {
     if (results.length) {
       return results.map(result => {
         const {results, postOrder} = result;
-        const resultsArr = results.split(' ');
-        const expandedResults  = {
-          id: resultsArr[1],
-          score: resultsArr[2].split('/')[0],
-          attempts: resultsArr.slice(3).join(' ')
-        };
-        return ({...expandedResults, postOrder});
+        return ({...this.handleResultsSplitting(results), postOrder});
       })
     }
     return [];
   }
-  getTrueResults(results) {
-    const resultsIds = results.map((result) => result.id);
-    const missingResults = this.answers
-      .map((answer) => answer.id)
-      .filter((id) => !resultsIds.includes(id));
-    const trueResults = [
-      ...results,
-      missingResults.map((result) => ({
-        id: result,
-        score: "X",
-        attempts: null,
-      })),
-    ].sort((a, b) => +a.id - +b.id);
-    return missingResults.length ? trueResults : results;
+  getFashionablyLateCount() {
+    return this.results.filter(result => result.postOrder === "5").length;
   }
-  getGuessDistribution() {
-    return this.results.reduce(
-      (a, b) => {
-        if (b.score in a) {
-          a[b.score]++;
-        } else {
-          a[b.score] = 1;
-        }
-        return a;
-      },
-      { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, x: 0 }
-    );
+  handleResultsSplitting(results) {
+    const resultsArr = results.split(' ');
+    const id = resultsArr[1];
+    const score = resultsArr[2].split('/')[0];
+    const attempts = resultsArr.slice(3).join(' ');
+    return ({ id: +id, score, attempts });
   }
   getAverageGuessAllTime() {
     const totalGuesses = this.results
