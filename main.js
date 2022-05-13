@@ -6,7 +6,7 @@ class Player {
     this.results = this.getExpandedResultsObject(results);
   }
   getEarlyBirdCount() {
-    return this.results.filter(result => result.postOrder === "1").length;
+    return this.results.filter(result => result.postOrder === 1).length;
   }
   getExpandedResultsObject(results) {
     if (results.length) {
@@ -18,7 +18,7 @@ class Player {
     return [];
   }
   getFashionablyLateCount() {
-    return this.results.filter(result => result.postOrder === "5").length;
+    return this.results.filter(result => result.postOrder === 5).length;
   }
   handleResultsSplitting(results) {
     const resultsArr = results.split(' ');
