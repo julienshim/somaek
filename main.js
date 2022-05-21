@@ -290,7 +290,7 @@ const getUseLessStatsHTML = () => {
           player.getNumberOfMisses() === arr[0].getNumberOfMisses()
       )
       .map((player) => [player.name, player.getNumberOfMisses()]),
-    "Most Misses",
+    "Swings and Misses",
     "times couldn't catch any letters in a guess"
   );
   const earlyBird = getLeadersHTML(
@@ -324,7 +324,7 @@ const getUseLessStatsHTML = () => {
       )
       .map((player) => [player.name, player.getLostInTheWoodsCount()]),
     "Lost In The Woods",
-    "guesses before finding a green squares"
+    "guesses before finding first green squares"
   );
   const likeASurgeon = getLeadersHTML(
     players
