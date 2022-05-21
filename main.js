@@ -8,6 +8,7 @@ class Player {
 
   // Individual Awards
   getEarlyBirdCount() {
+    console.log(this.results, this.name)
     return this.results.filter((result) => result.postOrder === 1).length;
   }
   getFashionablyLateCount() {
@@ -138,11 +139,12 @@ class Player {
   getAverageGuessByWeek(weekNumber) {
     const start = (weekNumber - 1) * 7;
     const end = start + 7;
-    const totalGuesses = this.results
+    const adjustedResults = this.getUserAdjustedResults()
+    const totalGuesses = adjustedResults
       .slice(start, end)
       .map((result) => (result.score === "X" ? 7 : +result.score))
       .reduce((acc, cur) => acc + cur, 0);
-    const totalPlayed = this.results.slice(start, end).length;
+    const totalPlayed = adjustedResults.slice(start, end).length;
     return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
   }
 
