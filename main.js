@@ -66,7 +66,7 @@ class Player {
         );
         return tmp.indexOf(true);
       })
-      .getSum();
+      .getSum() / this.results.length;
   }
   getPsychicCount() {
     return this.results
@@ -476,7 +476,7 @@ const getUseLessStatsHTML = () => {
       .map((player) => [
         player.name,
         player.getLostInTheWoodsCount(),
-        "guesses before finding first green squares",
+        "guess average before finding first green square",
       ]),
     "Lost In The Woods"
   );
