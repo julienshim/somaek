@@ -190,7 +190,7 @@ const displayPlayers = () => {
 const getPlayersAccordionHTML = () => {
   const weekNumber = document.getElementById("weekNumber");
   const currentWeek = Math.ceil(data.answers.length / 7);
-  const rankNumbers = players
+  const playerAverageGuessByWeekSortedArr = players
     .map((player) => player.getAverageGuessByWeek(currentWeek))
     .sort((a, b) => a - b);
   weekNumber.innerText = currentWeek;
@@ -201,22 +201,23 @@ const getPlayersAccordionHTML = () => {
         b.getAverageGuessByWeek(currentWeek)
     )
     .map((player, index) => {
-      const playerRank =
-        rankNumbers.indexOf(player.getAverageGuessByWeek(currentWeek)) + 1;
-      const tiePreFix =
-        rankNumbers.filter(
-          (rank) => rank === player.getAverageGuessByWeek(currentWeek)
-        ).length > 1
+      const playerRank = playerAverageGuessByWeekSortedArr.indexOf(player.getAverageGuessByWeek(currentWeek)) + 1;
+      const gamesPlayedTieBreakerArr = players.filter(otherPlayer => player.getAverageGuessByWeek(currentWeek) === otherPlayer.getAverageGuessByWeek(currentWeek)).map(player => player.getGamesPlayedCountByWeek(currentWeek));
+      const adjustedPlayerRank = gamesPlayedTieBreakerArr.indexOf(player.getGamesPlayedCountByWeek(currentWeek))
+      const tiePreFix = gamesPlayedTieBreakerArr.filter(gamesPlayed => gamesPlayed === player.getGamesPlayedCountByWeek(currentWeek)).length > 1
           ? "T"
           : "";
       return `<div class='accordion-item'>
             <h2 class='accordion-header' id='heading${index}'>
             <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse${index}' aria-expanded='true' aria-controls='collapse${index}'>
-            ${tiePreFix}${playerRank}. ${player.name.toUpperCase()} (${
-        String(player.getAverageGuessByWeek(currentWeek)).includes(".")
-          ? player.getAverageGuessByWeek(currentWeek).toFixed(2)
-          : player.getAverageGuessByWeek(currentWeek)
-      }) - ${player.getGamesPlayedCountByWeek(currentWeek)}
+            <span class='button-span-parent'>
+              <span>${tiePreFix}${playerRank + adjustedPlayerRank}. ${player.name.toUpperCase()}</span>
+              <span class="rank-notes">(${
+                String(player.getAverageGuessByWeek(currentWeek)).includes(".")
+                  ? player.getAverageGuessByWeek(currentWeek).toFixed(2)
+                  : player.getAverageGuessByWeek(currentWeek)
+              } guess average over ${player.getGamesPlayedCountByWeek(currentWeek)} game${player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'} played)</span>
+            </span>
             </button>
             </h2>
             <div id='collapse${index}' class='accordion-collapse collapse show' aria-labelledby='heading${index}'>
@@ -255,9 +256,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getPsychicCount() === arr[0].getPsychicCount()
       )
-      .map((player) => [player.name, player.getPsychicCount()]),
-    "Psychic",
-    "green squares found with first guesses"
+      .map((player) => [player.name, player.getPsychicCount(), "green squares found with first guesses"]),
+    "Psychic"
   );
   const lastWeekWinner = getLeadersHTML(
     players
@@ -270,9 +270,11 @@ const getUseLessStatsHTML = () => {
           player.getAverageGuessByWeek(lastWeek) ===
           arr[0].getAverageGuessByWeek(lastWeek)
       )
-      .map((player) => [player.name, player.getAverageGuessByWeek(lastWeek)]),
+      .filter(
+        (player, index, arr) => player.getGamesPlayedCountByWeek(lastWeek) === Math.max(...arr.map(player => player.getGamesPlayedCountByWeek(lastWeek)))
+      )
+      .map((player) => [player.name, player.getAverageGuessByWeek(lastWeek), `guess average over ${player.getGamesPlayedCountByWeek(lastWeek)} game${player.getGamesPlayedCountByWeek(lastWeek) === 1 ? '' : 's'} played`]),
     "Last Week's Winner",
-    "guess average"
   );
   const mostMisses = getLeadersHTML(
     players
@@ -281,9 +283,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getSwingsAndMissesCount() === arr[0].getSwingsAndMissesCount()
       )
-      .map((player) => [player.name, player.getSwingsAndMissesCount()]),
-    "Swings and Misses",
-    "times couldn't catch any letters in a guess"
+      .map((player) => [player.name, player.getSwingsAndMissesCount(), "times couldn't catch any letters in a guess"]),
+    "Swings and Misses"
   );
   const earlyBird = getLeadersHTML(
     players
@@ -292,9 +293,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getEarlyBirdCount() === arr[0].getEarlyBirdCount()
       )
-      .map((player) => [player.name, player.getEarlyBirdCount()]),
-    "Early Bird",
-    "times first to post"
+      .map((player) => [player.name, player.getEarlyBirdCount(), "times first to post"]),
+    "Early Bird"
   );
   const fashionablyLate = getLeadersHTML(
     players
@@ -303,9 +303,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getFashionablyLateCount() === arr[0].getFashionablyLateCount()
       )
-      .map((player) => [player.name, player.getFashionablyLateCount()]),
-    "Fashionably Late",
-    "times last to post"
+      .map((player) => [player.name, player.getFashionablyLateCount(), "times last to post"]),
+    "Fashionably Late"
   );
   const lostInTheWoods = getLeadersHTML(
     players
@@ -314,9 +313,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getLostInTheWoodsCount() === arr[0].getLostInTheWoodsCount()
       )
-      .map((player) => [player.name, player.getLostInTheWoodsCount()]),
-    "Lost In The Woods",
-    "guesses before finding first green squares"
+      .map((player) => [player.name, player.getLostInTheWoodsCount(), "guesses before finding first green squares"]),
+    "Lost In The Woods"
   );
   const likeASurgeon = getLeadersHTML(
     players
@@ -325,9 +323,8 @@ const getUseLessStatsHTML = () => {
         (player, index, arr) =>
           player.getSurgeonCount() === arr[0].getSurgeonCount()
       )
-      .map((player) => [player.name, player.getSurgeonCount()]),
-    "Like A Surgeon",
-    "wins without any yellow squares"
+      .map((player) => [player.name, player.getSurgeonCount(), "wins without any yellow squares"]),
+    "Like A Surgeon"
   );
 
   return [
@@ -340,12 +337,12 @@ const getUseLessStatsHTML = () => {
     likeASurgeon,
   ].join("");
 };
-const getLeadersHTML = (sortedAndFilteredArr, header, subHeader) => {
+const getLeadersHTML = (sortedAndFilteredArr, header) => {
   return `<div>
             <h5>${header}</h5>
             ${sortedAndFilteredArr
               .map(
-                ([name, value]) => 
+                ([name, value, subHeader]) => 
                   `<p>${name.toUpperCase()} - ${
                     String(value).includes(".") ? value.toFixed(2) : value
                   } ${subHeader}</p>`
@@ -372,7 +369,7 @@ const fetchJSONData = async (targetJSONFilename) => {
     console.log(error);
   }
 };
-fetchJSONData("somaek copy")
+fetchJSONData("somaek")
   .then((res) => {
     data = res;
   })

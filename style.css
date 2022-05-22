@@ -29,6 +29,18 @@ img.logo {
     width: 50%;
 }
 
+.accordion-button > .button-span-parent {
+    display: flex;
+    width: 100%;
+    margin-right: 10px;
+    justify-content: space-between;
+}
+
+.rank-notes {
+    font-size: .8rem;
+    color: #F7FFF6;
+}
+
 .accordion-button:not(.collapsed) {
     color: #F7FFF6;
     /* background-color: #93B48B; */
