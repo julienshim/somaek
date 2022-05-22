@@ -13,9 +13,13 @@ class Player {
 
   // MARK: CLASS INDIVIDUAL RESULTS
   getLowestScore() {
-    return Math.min(... this.results.filter(result => result.score !== 'X' && result.score !== 'N').map(result => +result.score));
+    return Math.min(
+      ...this.results
+        .filter((result) => result.score !== "X" && result.score !== "N")
+        .map((result) => +result.score)
+    );
   }
-  getBestDay(){
+  getBestDay() {
     const daysOfTheWeekKey = {
       0: "Saturday",
       1: "Sunday",
@@ -23,17 +27,22 @@ class Player {
       3: "Tuesday",
       4: "Wednesday",
       5: "Thursday",
-      6: "Friday"
-    }
-    const resultsScoresArr = this.results.map(result => result.score);
-    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map(day => {
-      const dayScores = resultsScoresArr.filter((score, index) => index % 7 === day).map(score => score === 'X' || score === 'N' ? 7 : +score);
+      6: "Friday",
+    };
+    const resultsScoresArr = this.results.map((result) => result.score);
+    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day) => {
+      const dayScores = resultsScoresArr
+        .filter((score, index) => index % 7 === day)
+        .map((score) => (score === "X" || score === "N" ? 7 : +score));
       return [daysOfTheWeekKey[day], dayScores.getSum() / dayScores.length];
     });
-    return daysOfTheWeekScore2DArr.filter(arr => arr[1] === Math.min(...daysOfTheWeekScore2DArr.map(arr => arr[1])))
+    return daysOfTheWeekScore2DArr.filter(
+      (arr) =>
+        arr[1] === Math.min(...daysOfTheWeekScore2DArr.map((arr) => arr[1]))
+    );
   }
   getNumberOfSixes() {
-    return this.results.filter(result => result.score === '6').length;
+    return this.results.filter((result) => result.score === "6").length;
   }
   getEarlyBirdCount() {
     return this.results.filter((result) => result.postOrder === 1).length;
@@ -217,32 +226,41 @@ const getPlayersAccordionHTML = () => {
     .map((player) => player.getAverageGuessByWeek(currentWeek))
     .sort((a, b) => a - b);
   weekNumber.innerText = currentWeek;
-  const weeklyWinners = [...Array(currentWeek-1).keys()].map((key, index) => index + 1).map(weekNumber => {
-    return players
-    .sort(
-      (a, b) =>
-        a.getAverageGuessByWeek(weekNumber) - b.getAverageGuessByWeek(weekNumber)
-    )
-    .filter(
-      (player, index, arr) =>
-        player.getAverageGuessByWeek(weekNumber) ===
-        arr[0].getAverageGuessByWeek(weekNumber)
-    )
-    .filter(
-      (player, index, arr) =>
-        player.getGamesPlayedCountByWeek(weekNumber) ===
-        Math.max(
-          ...arr.map((player) => player.getGamesPlayedCountByWeek(weekNumber))
+  const weeklyWinners = [...Array(currentWeek - 1).keys()]
+    .map((key, index) => index + 1)
+    .map((weekNumber) => {
+      return players
+        .sort(
+          (a, b) =>
+            a.getAverageGuessByWeek(weekNumber) -
+            b.getAverageGuessByWeek(weekNumber)
         )
-    )
-    .reduce((obj, player, index, arr) => ({...obj,
-      [player.name]: {
-        "average": player.getAverageGuessByWeek(weekNumber),
-        weekNumber,
-        "isCoWinner": arr.length > 1
-      }
-    }), {})
-  });
+        .filter(
+          (player, index, arr) =>
+            player.getAverageGuessByWeek(weekNumber) ===
+            arr[0].getAverageGuessByWeek(weekNumber)
+        )
+        .filter(
+          (player, index, arr) =>
+            player.getGamesPlayedCountByWeek(weekNumber) ===
+            Math.max(
+              ...arr.map((player) =>
+                player.getGamesPlayedCountByWeek(weekNumber)
+              )
+            )
+        )
+        .reduce(
+          (obj, player, index, arr) => ({
+            ...obj,
+            [player.name]: {
+              average: player.getAverageGuessByWeek(weekNumber),
+              weekNumber,
+              isCoWinner: arr.length > 1,
+            },
+          }),
+          {}
+        );
+    });
   return players
     .sort(
       (a, b) =>
@@ -271,18 +289,24 @@ const getPlayersAccordionHTML = () => {
         ).length > 1
           ? "T"
           : "";
-      const playerWeeklyWins = weeklyWinners.filter(obj => Object.keys(obj).includes(player.name)).map((object, index) =>  object[player.name].weekNumber + String((object[player.name].isCoWinner ? ' (Tied)' : '')));
+      const playerWeeklyWins = weeklyWinners
+        .filter((obj) => Object.keys(obj).includes(player.name))
+        .map(
+          (object, index) =>
+            object[player.name].weekNumber +
+            String(object[player.name].isCoWinner ? " (Tied)" : "")
+        );
       const stringListify = (arr) => {
         if (arr.length === 1) {
-          return arr[0]
+          return arr[0];
         }
         if (arr.length === 2) {
-          return arr[0] + ' and ' + stringListify(arr.slice(1))
+          return arr[0] + " and " + stringListify(arr.slice(1));
         }
         if (arr.length > 2) {
-          return arr[0] + ', ' + stringListify(arr.slice(1))
+          return arr[0] + ", " + stringListify(arr.slice(1));
         }
-      }
+      };
       return `<div class='accordion-item'>
             <h2 class='accordion-header' id='heading${index}'>
             <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse${index}' aria-expanded='true' aria-controls='collapse${index}'>
@@ -310,7 +334,9 @@ const getPlayersAccordionHTML = () => {
                           String(player.getGuessAverageAllTime()).includes(".")
                             ? player.getGuessAverageAllTime().toFixed(2)
                             : player.getGuessAverageAllTime()
-                        } over ${player.results.length} game${player.results.length === 1 ? '' : 's'} played</li>
+                        } over ${player.results.length} game${
+        player.results.length === 1 ? "" : "s"
+      } played</li>
                         <li>Win Percentage: ${
                           String(player.getWinPercentageAllTime()).includes(".")
                             ? player.getWinPercentageAllTime().toFixed(2)
@@ -318,8 +344,18 @@ const getPlayersAccordionHTML = () => {
                         }%</li>
                         <li>Current Streak: ${player.getCurrentStreak()}</li>
                         <li>Max Streak: ${player.getMaxStreak()}</li>
-                        ${playerWeeklyWins.length > 0 ? `<li>Won Week${playerWeeklyWins.length === 1 ? '' : 's'} ${stringListify(playerWeeklyWins)}</li>` : ''}
-                        <li>Plays best on ${stringListify(player.getBestDay().map(day => day[0] + 's'))} (${player.getBestDay()[0][1].toFixed(2)} guess average)</li>
+                        ${
+                          playerWeeklyWins.length > 0
+                            ? `<li>Won Week${
+                                playerWeeklyWins.length === 1 ? "" : "s"
+                              } ${stringListify(playerWeeklyWins)}</li>`
+                            : ""
+                        }
+                        <li>Plays best on ${stringListify(
+                          player.getBestDay().map((day) => day[0] + "s")
+                        )} (${player
+        .getBestDay()[0][1]
+        .toFixed(2)} guess average)</li>
                     </ul>
                 </div>
             </div>
@@ -482,7 +518,7 @@ const getUseLessStatsHTML = () => {
     fashionablyLate,
     lostInTheWoods,
     likeASurgeon,
-    livingOnTheEdge
+    livingOnTheEdge,
   ].join("");
 };
 const getLeadersHTML = (sortedAndFilteredArr, header) => {
