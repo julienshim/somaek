@@ -1,66 +1,71 @@
+Array.prototype.getSum = function () {
+  return this.reduce((acc, cur) => acc + cur, 0);
+};
+
 class Player {
   constructor(name, results, answers) {
     this.name = name;
     this.answers = answers;
     this.hasPlayed = results.length > 0;
     this.results = this.getExpandedResultsObject(results);
+    this.adjustedResults = this.getUserAdjustedResults();
   }
 
-  // Individual Awards
+  // MARK: CLASS INDIVIDUAL RESULTS
   getEarlyBirdCount() {
-    console.log(this.results, this.name)
     return this.results.filter((result) => result.postOrder === 1).length;
   }
   getFashionablyLateCount() {
     return this.results.filter((result) => result.postOrder === 5).length;
   }
   getSurgeonCount() {
-    const surgeonCountArr = this.results
-        .filter((result) => result.score !== 'X' && result.score !== 'N' && !result.attempts.includes('🟨'));
-    return surgeonCountArr.length;
-  }
-
-  getLostInTheWoodsCount() {
-    const lostInTheWoodsCountArr = this.results
-    .filter(result => result.score !== 'N')
-    .map(
-      (result) => {
-        const tmp = [...result.attempts.split(" ")].map(guess => guess.includes("🟩"));
-        return tmp.indexOf(true)
-      });
-    return lostInTheWoodsCountArr.reduce((a, c) => a + c, 0);
-  }
-
-  getNumberOfFirstAttemptGreenBoxes() {
-    const firstAttemptGreenBoxesCountArr = this.results
-    .filter(result => result.score !== 'N')
-    .map(
+    return this.results.filter(
       (result) =>
-        [...result.attempts.split(" ")[0]].filter((box) => box === "🟩").length
-    );
-    return firstAttemptGreenBoxesCountArr.reduce((acc, cur) => acc + cur, 0);
+        result.score !== "X" &&
+        result.score !== "N" &&
+        !result.attempts.includes("🟨")
+    ).length;
+  }
+  getLostInTheWoodsCount() {
+    return this.results
+      .map((result) => {
+        const tmp = [...result.attempts.split(" ")].map((guess) =>
+          guess.includes("🟩")
+        );
+        return tmp.indexOf(true);
+      })
+      .getSum();
+  }
+  getPsychicCount() {
+    return this.results
+      .filter((result) => result.score !== "N")
+      .map(
+        (result) =>
+          [...result.attempts.split(" ")[0]].filter((box) => box === "🟩")
+            .length
+      )
+      .getSum();
+  }
+  getSwingsAndMissesCount() {
+    const missesArr = this.results
+      .map((result) =>
+        result.attempts.split(" ").filter((block) => block === "⬛⬛⬛⬛⬛")
+      )
+      .filter((block) => block.length);
+    return missesArr.length;
   }
 
-  // All Time Stats
-  getAverageGuessAllTime() {
-    const totalGuesses = this.results
-      .map((result) => (result.score === "X" ? 7 : +result.score))
-      .reduce((acc, cur) => acc + cur, 0);
-    const totalPlayed = this.results.length;
-    return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
-  }
-  getWinPercentage() {
-    const totalWins = this.results.filter(
-      (result) => result.score !== "X"
-    ).length;
-    const totalPlayed = this.results.length;
-    return (totalWins / totalPlayed) * 100;
-  }
-  getValidGameIdsAllTime() {
+  // MARK: CLASS HELPER FUNCTIONS
+  getAllValidGameIds() {
     return this.answers.map((answer) => answer.id);
   }
+  getValidGameIdsByWeek(weekNumber) {
+    const start = (weekNumber - 1) * 7;
+    const end = start + 7;
+    return this.answers.slice(start, end).map((answer) => answer.id);
+  }
   getUserAdjustedResults() {
-    const validGameIdsAllTime = this.getValidGameIdsAllTime();
+    const validGameIdsAllTime = this.getAllValidGameIds();
     const adjustedResults = [];
     for (let validGameId of validGameIdsAllTime) {
       const validGameIdExistsSearchResults = this.results.filter(
@@ -79,11 +84,26 @@ class Player {
     }
     return adjustedResults;
   }
+
+  // MARK: CLASS ALL TIME RESULTS
+  getGuessAverageAllTime() {
+    const totalGuesses = this.results
+      .map((result) => (result.score === "X" ? 7 : +result.score))
+      .getSum();
+    const totalPlayed = this.results.length;
+    return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
+  }
+  getWinPercentageAllTime() {
+    const totalWins = this.results.filter(
+      (result) => result.score !== "X"
+    ).length;
+    const totalPlayed = this.results.length;
+    return (totalWins / totalPlayed) * 100;
+  }
   getMaxStreak() {
-    const adjustedResults = this.getUserAdjustedResults();
     let max = 0;
     let currentStreak = 0;
-    for (let result of adjustedResults) {
+    for (let result of this.adjustedResults) {
       if (result.score !== "X" && result.score !== "N") {
         currentStreak += 1;
       } else {
@@ -96,8 +116,7 @@ class Player {
     return this.hasPlayed ? max : 0;
   }
   getCurrentStreak() {
-    const adjustedResults = this.getUserAdjustedResults();
-    const scoresArrReversed = adjustedResults
+    const scoresArrReversed = this.adjustedResults
       .map((result) => result.score)
       .reverse();
     const indexOfX = scoresArrReversed.indexOf("X");
@@ -110,26 +129,13 @@ class Player {
       } else if (indexOfN > -1 && indexOfX > -1) {
         return indexOfN < indexOfX ? indexOfN : indexOfX;
       } else {
-        return adjustedResults.length;
+        return this.adjustedResults.length;
       }
     }
     return 0;
   }
-  getNumberOfMisses() {
-    const missesArr = this.results
-      .map((result) =>
-        result.attempts.split(" ").filter((block) => block === "⬛⬛⬛⬛⬛")
-      )
-      .filter((block) => block.length);
-    return missesArr.length;
-  }
 
-  // Weekly Stats
-  getValidGameIdsByWeek(weekNumber) {
-    const start = (weekNumber - 1) * 7;
-    const end = start + 7;
-    return this.answers.slice(start, end).map((answer) => answer.id);
-  }
+  // MARK: CLASS WEEKLY RESULTS
   getGamesPlayedCountByWeek(weekNumber) {
     const validGameIdsByWeek = this.getValidGameIdsByWeek(weekNumber);
     return this.results.filter((result) =>
@@ -139,17 +145,16 @@ class Player {
   getAverageGuessByWeek(weekNumber) {
     const start = (weekNumber - 1) * 7;
     const end = start + 7;
-    const adjustedResults = this.getUserAdjustedResults()
-    const totalGuesses = adjustedResults
+    const totalGuesses = this.adjustedResults
       .slice(start, end)
+      .filter((result) => result.score !== 'N')
       .map((result) => (result.score === "X" ? 7 : +result.score))
-      .reduce((acc, cur) => acc + cur, 0);
-    const totalPlayed = adjustedResults.slice(start, end).length;
+      .getSum();
+    const totalPlayed = this.adjustedResults.slice(start, end).length;
     return this.hasPlayed ? totalGuesses / totalPlayed : "Has Not Played";
   }
 
-  // Expanded Results
-
+  // MARK: CLASS EXPANDED RESULTS
   handleResultsSplitting(results) {
     const resultsArr = results.split(" ");
     const id = resultsArr[1];
@@ -157,7 +162,6 @@ class Player {
     const attempts = resultsArr.slice(3).join(" ");
     return { id: +id, score, attempts };
   }
-
   getExpandedResultsObject(results) {
     if (results.length) {
       return results.map((result) => {
@@ -169,10 +173,9 @@ class Player {
   }
 }
 
+// MARK: MAIN
 let data = undefined;
-
 const players = [];
-
 const loadPlayers = () => {
   const keys = Object.keys(data.players).sort();
   for (let key of keys) {
@@ -180,12 +183,10 @@ const loadPlayers = () => {
     players.push(player);
   }
 };
-
 const displayPlayers = () => {
   const playersAccordion = document.getElementById("playersAccordion");
   playersAccordion.innerHTML = getPlayersAccordionHTML();
 };
-
 const getPlayersAccordionHTML = () => {
   const weekNumber = document.getElementById("weekNumber");
   const currentWeek = Math.ceil(data.answers.length / 7);
@@ -193,7 +194,6 @@ const getPlayersAccordionHTML = () => {
     .map((player) => player.getAverageGuessByWeek(currentWeek))
     .sort((a, b) => a - b);
   weekNumber.innerText = currentWeek;
-
   return players
     .sort(
       (a, b) =>
@@ -216,7 +216,7 @@ const getPlayersAccordionHTML = () => {
         String(player.getAverageGuessByWeek(currentWeek)).includes(".")
           ? player.getAverageGuessByWeek(currentWeek).toFixed(2)
           : player.getAverageGuessByWeek(currentWeek)
-      })
+      }) - ${player.getGamesPlayedCountByWeek(currentWeek)}
             </button>
             </h2>
             <div id='collapse${index}' class='accordion-collapse collapse show' aria-labelledby='heading${index}'>
@@ -224,14 +224,14 @@ const getPlayersAccordionHTML = () => {
                     <h5>All-Time Statistics</h5>
                     <ul>
                         <li>Guess Average: ${
-                          String(player.getAverageGuessAllTime()).includes(".")
-                            ? player.getAverageGuessAllTime().toFixed(2)
-                            : player.getAverageGuessAllTime()
+                          String(player.getGuessAverageAllTime()).includes(".")
+                            ? player.getGuessAverageAllTime().toFixed(2)
+                            : player.getGuessAverageAllTime()
                         }</li>
                         <li>Win Percentage: ${
-                          String(player.getWinPercentage()).includes(".")
-                            ? player.getWinPercentage().toFixed(2)
-                            : player.getWinPercentage()
+                          String(player.getWinPercentageAllTime()).includes(".")
+                            ? player.getWinPercentageAllTime().toFixed(2)
+                            : player.getWinPercentageAllTime()
                         }%</li>
                         <li>Current Streak: ${player.getCurrentStreak()}</li>
                         <li>Max Streak: ${player.getMaxStreak()}</li>
@@ -242,30 +242,20 @@ const getPlayersAccordionHTML = () => {
     })
     .join("");
 };
-
 const displayUselessStats = () => {
   const uselessStats = document.getElementById("uselessStats");
   uselessStats.innerHTML = getUseLessStatsHTML();
 };
-
 const getUseLessStatsHTML = () => {
   const lastWeek = Math.ceil(data.answers.length / 7) - 1;
   const psychic = getLeadersHTML(
     players
-      .sort(
-        (a, b) =>
-          b.getNumberOfFirstAttemptGreenBoxes() -
-          a.getNumberOfFirstAttemptGreenBoxes()
-      )
+      .sort((a, b) => b.getPsychicCount() - a.getPsychicCount())
       .filter(
         (player, index, arr) =>
-          player.getNumberOfFirstAttemptGreenBoxes() ===
-          arr[0].getNumberOfFirstAttemptGreenBoxes()
+          player.getPsychicCount() === arr[0].getPsychicCount()
       )
-      .map((player) => [
-        player.name,
-        player.getNumberOfFirstAttemptGreenBoxes(),
-      ]),
+      .map((player) => [player.name, player.getPsychicCount()]),
     "Psychic",
     "green squares found with first guesses"
   );
@@ -286,12 +276,12 @@ const getUseLessStatsHTML = () => {
   );
   const mostMisses = getLeadersHTML(
     players
-      .sort((a, b) => b.getNumberOfMisses() - a.getNumberOfMisses())
+      .sort((a, b) => b.getSwingsAndMissesCount() - a.getSwingsAndMissesCount())
       .filter(
         (player, index, arr) =>
-          player.getNumberOfMisses() === arr[0].getNumberOfMisses()
+          player.getSwingsAndMissesCount() === arr[0].getSwingsAndMissesCount()
       )
-      .map((player) => [player.name, player.getNumberOfMisses()]),
+      .map((player) => [player.name, player.getSwingsAndMissesCount()]),
     "Swings and Misses",
     "times couldn't catch any letters in a guess"
   );
@@ -340,17 +330,22 @@ const getUseLessStatsHTML = () => {
     "wins without any yellow squares"
   );
 
-  return [psychic, lastWeekWinner, mostMisses, earlyBird, fashionablyLate, lostInTheWoods, likeASurgeon].join(
-    ""
-  );
+  return [
+    psychic,
+    lastWeekWinner,
+    mostMisses,
+    earlyBird,
+    fashionablyLate,
+    lostInTheWoods,
+    likeASurgeon,
+  ].join("");
 };
-
 const getLeadersHTML = (sortedAndFilteredArr, header, subHeader) => {
   return `<div>
             <h5>${header}</h5>
             ${sortedAndFilteredArr
               .map(
-                ([name, value]) =>
+                ([name, value]) => 
                   `<p>${name.toUpperCase()} - ${
                     String(value).includes(".") ? value.toFixed(2) : value
                   } ${subHeader}</p>`
@@ -358,7 +353,14 @@ const getLeadersHTML = (sortedAndFilteredArr, header, subHeader) => {
               .join("")}
           </div>`;
 };
+const lastUpdateUpdated = () => {
+  const recentGame = data.answers[data.answers.length - 1];
+  const lastUpdatedDate = new Date(recentGame.date).toDateString();
+  const lastUpdatedParagraph = document.getElementById("lastUpdated");
+  lastUpdatedParagraph.innerText = `Last Update: ${lastUpdatedDate} (Wordle ${recentGame.id})`;
+};
 
+// MARK: FETCH DATA
 const fetchJSONData = async (targetJSONFilename) => {
   try {
     const response = await fetch(`./${targetJSONFilename}.json`);
@@ -370,15 +372,7 @@ const fetchJSONData = async (targetJSONFilename) => {
     console.log(error);
   }
 };
-
-const lastUpdateUpdated = () => {
-  const recentGame = data.answers[data.answers.length - 1];
-  const lastUpdatedDate = new Date(recentGame.date).toDateString();
-  const lastUpdatedParagraph = document.getElementById("lastUpdated");
-  lastUpdatedParagraph.innerText = `Last Update: ${lastUpdatedDate} (Wordle ${recentGame.id})`;
-};
-
-fetchJSONData("somaek")
+fetchJSONData("somaek copy")
   .then((res) => {
     data = res;
   })
