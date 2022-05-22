@@ -12,6 +12,9 @@ class Player {
   }
 
   // MARK: CLASS INDIVIDUAL RESULTS
+  getLowestScore() {
+    return Math.min(... this.results.filter(result => result.score !== 'X' && result.score !== 'N').map(result => +result.score));
+  }
   getEarlyBirdCount() {
     return this.results.filter((result) => result.postOrder === 1).length;
   }
@@ -309,6 +312,20 @@ const displayUselessStats = () => {
 };
 const getUseLessStatsHTML = () => {
   const lastWeek = Math.ceil(data.answers.length / 7) - 1;
+  const gunSlinger = getLeadersHTML(
+    players
+      .sort((a, b) => a.getLowestScore() - b.getLowestScore())
+      .filter(
+        (player, index, arr) =>
+          player.getLowestScore() === arr[0].getLowestScore()
+      )
+      .map((player) => [
+        player.name,
+        player.getLowestScore(),
+        "green squares found with first guesses",
+      ]),
+    "Gun Slinger"
+  );
   const psychic = getLeadersHTML(
     players
       .sort((a, b) => b.getPsychicCount() - a.getPsychicCount())
@@ -422,6 +439,7 @@ const getUseLessStatsHTML = () => {
   );
 
   return [
+    gunSlinger,
     psychic,
     lastWeekWinner,
     mostMisses,
