@@ -56,6 +56,15 @@ img.logo {
     box-shadow: 0 0 0 .25rem rgba(0,0,0,.125);
 }
 
+.accordion-button {
+    background-color: #F5F5F5;
+
+}
+
+.accordion-button.collapsed span span {
+    color: black;
+}
+
 .useless-stats {
     background-color:#F5F5F5;
     border: 1px solid rgba(0,0,0,.125);
