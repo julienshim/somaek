@@ -9,7 +9,6 @@ class Player {
     this.hasPlayed = results.length > 0;
     this.results = this.getExpandedResultsObject(results);
     this.adjustedResults = this.getUserAdjustedResults();
-    this.bestDay = this.getBestDay();
   }
 
   // MARK: CLASS INDIVIDUAL RESULTS
@@ -31,9 +30,7 @@ class Player {
       const dayScores = resultsScoresArr.filter((score, index) => index % 7 === day).map(score => score === 'X' || score === 'N' ? 7 : +score);
       return [daysOfTheWeekKey[day], dayScores.getSum() / dayScores.length];
     });
-    console.log(daysOfTheWeekScore2DArr)
-    console.log(this.name, daysOfTheWeekScore2DArr.filter(arr => arr[1] === Math.min(...daysOfTheWeekScore2DArr.map(arr => arr[1]))).map(arr => arr[0]))
-    return daysOfTheWeekScore2DArr.filter(arr => arr[1] === Math.min(...daysOfTheWeekScore2DArr.map(arr => arr[1]))).map(arr => arr[0])
+    return daysOfTheWeekScore2DArr.filter(arr => arr[1] === Math.min(...daysOfTheWeekScore2DArr.map(arr => arr[1])))
   }
   getNumberOfSixes() {
     return this.results.filter(result => result.score === '6').length;
@@ -322,7 +319,7 @@ const getPlayersAccordionHTML = () => {
                         <li>Current Streak: ${player.getCurrentStreak()}</li>
                         <li>Max Streak: ${player.getMaxStreak()}</li>
                         ${playerWeeklyWins.length > 0 ? `<li>Won Week${playerWeeklyWins.length === 1 ? '' : 's'} ${stringListify(playerWeeklyWins)}</li>` : ''}
-                        <li>Plays best on ${stringListify(player.getBestDay().map(day => day + 's'))}
+                        <li>Plays best on ${stringListify(player.getBestDay().map(day => day[0] + 's'))} (${player.getBestDay()[0][1].toFixed(2)} guess average)</li>
                     </ul>
                 </div>
             </div>
