@@ -322,7 +322,7 @@ const getUseLessStatsHTML = () => {
       .map((player) => [
         player.name,
         player.getLowestScore(),
-        "green squares found with first guesses",
+        "guesses in one game (lowest score)",
       ]),
     "Gun Slinger"
   );
