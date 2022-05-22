@@ -15,6 +15,9 @@ class Player {
   getLowestScore() {
     return Math.min(... this.results.filter(result => result.score !== 'X' && result.score !== 'N').map(result => +result.score));
   }
+  getNumberOfSixes() {
+    return this.results.filter(result => result.score === '6').length;
+  }
   getEarlyBirdCount() {
     return this.results.filter((result) => result.postOrder === 1).length;
   }
@@ -437,6 +440,20 @@ const getUseLessStatsHTML = () => {
       ]),
     "Like A Surgeon"
   );
+  const livingOnTheEdge = getLeadersHTML(
+    players
+      .sort((a, b) => b.getNumberOfSixes() - a.getNumberOfSixes())
+      .filter(
+        (player, index, arr) =>
+          player.getNumberOfSixes() === arr[0].getNumberOfSixes()
+      )
+      .map((player) => [
+        player.name,
+        player.getNumberOfSixes(),
+        "max guess games",
+      ]),
+    "Living On The Edge"
+  );
 
   return [
     gunSlinger,
@@ -447,6 +464,7 @@ const getUseLessStatsHTML = () => {
     fashionablyLate,
     lostInTheWoods,
     likeASurgeon,
+    livingOnTheEdge
   ].join("");
 };
 const getLeadersHTML = (sortedAndFilteredArr, header) => {
