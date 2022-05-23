@@ -41,6 +41,28 @@ class Player {
         arr[1] === Math.min(...daysOfTheWeekScore2DArr.map((arr) => arr[1]))
     );
   }
+  getWorstDay() {
+    const daysOfTheWeekKey = {
+      0: 'Saturday',
+      1: 'Sunday',
+      2: 'Monday',
+      3: 'Tuesday',
+      4: 'Wednesday',
+      5: 'Thursday',
+      6: 'Friday',
+    };
+    const resultsScoresArr = this.results.map((result) => result.score);
+    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day) => {
+      const dayScores = resultsScoresArr
+        .filter((score, index) => index % 7 === day)
+        .map((score) => (score === 'X' || score === 'N' ? 7 : +score));
+      return [daysOfTheWeekKey[day], dayScores.getSum() / dayScores.length];
+    });
+    return daysOfTheWeekScore2DArr.filter(
+      (arr) =>
+        arr[1] === Math.max(...daysOfTheWeekScore2DArr.map((arr) => arr[1]))
+    );
+  }
   getNumberOfSixes() {
     return this.results.filter((result) => result.score === '6').length;
   }
@@ -79,12 +101,15 @@ class Player {
       .getSum();
   }
   getSwingsAndMissesCount() {
-    const missesArr = this.results
+    return this.results
       .map((result) =>
         result.attempts.split(' ').filter((block) => block === '⬛⬛⬛⬛⬛')
       )
-      .filter((block) => block.length);
-    return missesArr.length;
+      .filter((block) => block.length).length;
+  }
+  getCaseOfTheXCount() {
+    return this.results
+      .filter((result) => result.score == 'X').length;
   }
 
   // MARK: CLASS HELPER FUNCTIONS
@@ -356,6 +381,11 @@ const getPlayersAccordionHTML = () => {
                         )} (${player
         .getBestDay()[0][1]
         .toFixed(2)} guess average)</li>
+                        <li>Doesn't play well on ${stringListify(
+                                  player.getWorstDay().map((day) => day[0] + 's')
+                                )} (${player
+                        .getWorstDay()[0][1]
+                        .toFixed(2)} guess average)</li>
                     </ul>
                 </div>
             </div>
@@ -509,16 +539,32 @@ const getUseLessStatsHTML = () => {
     'Living On The Edge'
   );
 
+  const caseOfTheX = getLeadersHTML(
+    players
+      .sort((a, b) => b.getCaseOfTheXCount() - a.getCaseOfTheXCount())
+      .filter(
+        (player, index, arr) =>
+          player.getCaseOfTheXCount() === arr[0].getCaseOfTheXCount()
+      )
+      .map((player) => [
+        player.name,
+        player.getCaseOfTheXCount(),
+        'times scored the dreaded X/6',
+      ]),
+    'Case of the X'
+  );
+
   return [
-    gunSlinger,
-    psychic,
-    lastWeekWinner,
-    mostMisses,
+    caseOfTheX,
     earlyBird,
     fashionablyLate,
-    lostInTheWoods,
+    gunSlinger,
+    lastWeekWinner,
     likeASurgeon,
     livingOnTheEdge,
+    lostInTheWoods,
+    mostMisses,
+    psychic
   ].join('');
 };
 const getLeadersHTML = (sortedAndFilteredArr, header) => {
