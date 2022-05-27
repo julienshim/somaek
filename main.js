@@ -19,7 +19,18 @@ class Player {
         .map((result) => +result.score)
     );
   }
+  getDayOfTheWeekAllTimeGamesCount(){
+    const somaekDaysOfTheWeekArr = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+    const dayOfTheWeekAllTimeGamesCount = somaekDaysOfTheWeekArr
+                                        .reduce((acc, curr, indexA) => {
+                                          const temp =  {...acc, [curr]: this.answers.filter((game, index) => index % 7 === indexA).length};
+                                          return temp
+                                        }, {});
+    return dayOfTheWeekAllTimeGamesCount;
+  }
   getBestDay() {
+    const dayOfTheWeekAllTimeGamesCount = this.getDayOfTheWeekAllTimeGamesCount()
     const daysOfTheWeekKey = {
       0: 'Saturday',
       1: 'Sunday',
@@ -29,12 +40,12 @@ class Player {
       5: 'Thursday',
       6: 'Friday',
     };
-    const resultsScoresArr = this.results.map((result) => result.score);
-    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day) => {
+    const resultsScoresArr = this.adjustedResults.map((result) => result.score);
+    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day, index) => {
       const dayScores = resultsScoresArr
-        .filter((score, index) => index % 7 === day)
-        .map((score) => (score === 'X' || score === 'N' ? 7 : +score));
-      return [daysOfTheWeekKey[day], dayScores.getSum() / dayScores.length];
+        .filter((score, index) => index % 7 === day && score !== 'N')
+        .map((score) => (score === 'X' ? 7 : +score));
+      return [daysOfTheWeekKey[day], (dayScores.getSum() / dayScores.length) * (dayOfTheWeekAllTimeGamesCount[daysOfTheWeekKey[index]] / dayScores.length)];
     });
     return daysOfTheWeekScore2DArr.filter(
       (arr) =>
@@ -42,6 +53,7 @@ class Player {
     );
   }
   getWorstDay() {
+    const dayOfTheWeekAllTimeGamesCount = this.getDayOfTheWeekAllTimeGamesCount()
     const daysOfTheWeekKey = {
       0: 'Saturday',
       1: 'Sunday',
@@ -52,11 +64,11 @@ class Player {
       6: 'Friday',
     };
     const resultsScoresArr = this.results.map((result) => result.score);
-    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day) => {
+    const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day, index) => {
       const dayScores = resultsScoresArr
-        .filter((score, index) => index % 7 === day)
-        .map((score) => (score === 'X' || score === 'N' ? 7 : +score));
-      return [daysOfTheWeekKey[day], dayScores.getSum() / dayScores.length];
+        .filter((score, index) => index % 7 === day && score !== 'N')
+        .map((score) => (score === 'X' ? 7 : +score));
+      return [daysOfTheWeekKey[day], (dayScores.getSum() / dayScores.length) * (dayOfTheWeekAllTimeGamesCount[daysOfTheWeekKey[index]] / dayScores.length)];
     });
     return daysOfTheWeekScore2DArr.filter(
       (arr) =>
@@ -143,12 +155,12 @@ class Player {
   }
 
   // MARK: CLASS ALL TIME RESULTS
-  getGuessAverageAllTime() {
+  getWeightedGuessAverageAllTime() {
     const totalGuesses = this.results
       .map((result) => (result.score === 'X' ? 7 : +result.score))
       .getSum();
     const totalPlayed = this.results.length;
-    return this.hasPlayed ? totalGuesses / totalPlayed : 'Has Not Played';
+    return this.hasPlayed ? (totalGuesses / totalPlayed) * (this.answers.length / totalPlayed) : 'Has Not Played';
   }
   getWinPercentageAllTime() {
     const totalWins = this.results.filter(
@@ -199,16 +211,11 @@ class Player {
       validGameIdsByWeek.includes(result.id)
     ).length;
   }
-  getAverageGuessByWeek(weekNumber) {
-    const start = (weekNumber - 1) * 7;
-    const end = start + 7;
-    const totalGuesses = this.adjustedResults
-      .slice(start, end)
-      .filter((result) => result.score !== 'N')
-      .map((result) => (result.score === 'X' ? 7 : +result.score))
-      .getSum();
-    const totalPlayed = this.adjustedResults.slice(start, end).length;
-    return this.hasPlayed ? totalGuesses / totalPlayed : 'Has Not Played';
+  getWeightedAverageGuessByWeek(weekNumber) {
+    const validGameIdsByWeek = this.getValidGameIdsByWeek(weekNumber);
+    const totalGuesses = this.results.filter((result) => validGameIdsByWeek.includes(result.id)).map(result => result.score === 'X' ? 7 : +result.score).getSum()
+    const gamesPlayedThisWeek = this.results.filter((result) => validGameIdsByWeek.includes(result.id)).length;
+    return (totalGuesses / gamesPlayedThisWeek) * (validGameIdsByWeek.length / gamesPlayedThisWeek);
   }
 
   // MARK: CLASS EXPANDED RESULTS
@@ -248,7 +255,7 @@ const getPlayersAccordionHTML = () => {
   const weekNumber = document.getElementById('weekNumber');
   const currentWeek = Math.ceil(data.answers.length / 7);
   const playerAverageGuessByWeekSortedArr = players
-    .map((player) => player.getAverageGuessByWeek(currentWeek))
+    .map((player) => player.getWeightedAverageGuessByWeek(currentWeek))
     .sort((a, b) => a - b);
   weekNumber.innerText = currentWeek;
   const weeklyWinners = [...Array(currentWeek - 1).keys()]
@@ -257,13 +264,13 @@ const getPlayersAccordionHTML = () => {
       return players
         .sort(
           (a, b) =>
-            a.getAverageGuessByWeek(weekNumber) -
-            b.getAverageGuessByWeek(weekNumber)
+            a.getWeightedAverageGuessByWeek(weekNumber) -
+            b.getWeightedAverageGuessByWeek(weekNumber)
         )
         .filter(
           (player, index, arr) =>
-            player.getAverageGuessByWeek(weekNumber) ===
-            arr[0].getAverageGuessByWeek(weekNumber)
+            player.getWeightedAverageGuessByWeek(weekNumber) ===
+            arr[0].getWeightedAverageGuessByWeek(weekNumber)
         )
         .filter(
           (player, index, arr) =>
@@ -278,7 +285,7 @@ const getPlayersAccordionHTML = () => {
           (obj, player, index, arr) => ({
             ...obj,
             [player.name]: {
-              average: player.getAverageGuessByWeek(weekNumber),
+              average: player.getWeightedAverageGuessByWeek(weekNumber),
               weekNumber,
               isCoWinner: arr.length > 1,
             },
@@ -289,19 +296,19 @@ const getPlayersAccordionHTML = () => {
   return players
     .sort(
       (a, b) =>
-        a.getAverageGuessByWeek(currentWeek) -
-        b.getAverageGuessByWeek(currentWeek)
+        a.getWeightedAverageGuessByWeek(currentWeek) -
+        b.getWeightedAverageGuessByWeek(currentWeek)
     )
     .map((player, index) => {
       const playerRank =
         playerAverageGuessByWeekSortedArr.indexOf(
-          player.getAverageGuessByWeek(currentWeek)
+          player.getWeightedAverageGuessByWeek(currentWeek)
         ) + 1;
       const gamesPlayedTieBreakerArr = players
         .filter(
           (otherPlayer) =>
-            player.getAverageGuessByWeek(currentWeek) ===
-            otherPlayer.getAverageGuessByWeek(currentWeek)
+            player.getWeightedAverageGuessByWeek(currentWeek) ===
+            otherPlayer.getWeightedAverageGuessByWeek(currentWeek)
         )
         .map((player) => player.getGamesPlayedCountByWeek(currentWeek));
       const adjustedPlayerRank = gamesPlayedTieBreakerArr.indexOf(
@@ -340,10 +347,10 @@ const getPlayersAccordionHTML = () => {
         playerRank + adjustedPlayerRank
       }. ${player.name.toUpperCase()}</span>
               <span class='rank-notes'>(${
-                String(player.getAverageGuessByWeek(currentWeek)).includes('.')
-                  ? player.getAverageGuessByWeek(currentWeek).toFixed(2)
-                  : player.getAverageGuessByWeek(currentWeek)
-              } guess average over ${player.getGamesPlayedCountByWeek(
+                String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
+                  ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
+                  : player.getWeightedAverageGuessByWeek(currentWeek)
+              } weighted guess average over ${player.getGamesPlayedCountByWeek(
         currentWeek
       )} game${
         player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
@@ -355,10 +362,10 @@ const getPlayersAccordionHTML = () => {
                 <div class='accordion-body'>
                     <h5>All-Time Statistics</h5>
                     <ul>
-                        <li>Guess Average: ${
-                          String(player.getGuessAverageAllTime()).includes('.')
-                            ? player.getGuessAverageAllTime().toFixed(2)
-                            : player.getGuessAverageAllTime()
+                        <li>Weighted Guess Average: ${
+                          String(player.getWeightedGuessAverageAllTime()).includes('.')
+                            ? player.getWeightedGuessAverageAllTime().toFixed(2)
+                            : player.getWeightedGuessAverageAllTime()
                         } over ${player.results.length} game${
         player.results.length === 1 ? '' : 's'
       } played</li>
@@ -380,12 +387,12 @@ const getPlayersAccordionHTML = () => {
                           player.getBestDay().map((day) => day[0] + 's')
                         )} (${player
         .getBestDay()[0][1]
-        .toFixed(2)} guess average)</li>
+        .toFixed(2)} weighted guess average)</li>
                         <li>Doesn't play well on ${stringListify(
                                   player.getWorstDay().map((day) => day[0] + 's')
                                 )} (${player
                         .getWorstDay()[0][1]
-                        .toFixed(2)} guess average)</li>
+                        .toFixed(2)} weighted guess average)</li>
                     </ul>
                 </div>
             </div>
@@ -431,12 +438,12 @@ const getUseLessStatsHTML = () => {
     players
       .sort(
         (a, b) =>
-          a.getAverageGuessByWeek(lastWeek) - b.getAverageGuessByWeek(lastWeek)
+          a.getWeightedAverageGuessByWeek(lastWeek) - b.getWeightedAverageGuessByWeek(lastWeek)
       )
       .filter(
         (player, index, arr) =>
-          player.getAverageGuessByWeek(lastWeek) ===
-          arr[0].getAverageGuessByWeek(lastWeek)
+          player.getWeightedAverageGuessByWeek(lastWeek) ===
+          arr[0].getWeightedAverageGuessByWeek(lastWeek)
       )
       .filter(
         (player, index, arr) =>
@@ -447,8 +454,8 @@ const getUseLessStatsHTML = () => {
       )
       .map((player) => [
         player.name,
-        player.getAverageGuessByWeek(lastWeek),
-        `guess average over ${player.getGamesPlayedCountByWeek(lastWeek)} game${
+        player.getWeightedAverageGuessByWeek(lastWeek),
+        `weighted guess average over ${player.getGamesPlayedCountByWeek(lastWeek)} game${
           player.getGamesPlayedCountByWeek(lastWeek) === 1 ? '' : 's'
         } played`,
       ]),
