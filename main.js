@@ -63,7 +63,7 @@ class Player {
       5: 'Thursday',
       6: 'Friday',
     };
-    const resultsScoresArr = this.results.map((result) => result.score);
+    const resultsScoresArr = this.adjustedResults.map((result) => result.score);
     const daysOfTheWeekScore2DArr = [...Array(7).keys()].map((day, index) => {
       const dayScores = resultsScoresArr
         .filter((score, index) => index % 7 === day && score !== 'N')
