@@ -36,6 +36,10 @@ img.logo {
     justify-content: space-between;
 }
 
+.accordion-button > .button-span-parent > span:first-child {
+    min-width: 48px;
+}
+
 .rank-notes {
     font-size: .8rem;
     color: #F7FFF6;
