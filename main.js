@@ -350,11 +350,9 @@ const getPlayersAccordionHTML = () => {
                 String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
                   ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
                   : player.getWeightedAverageGuessByWeek(currentWeek)
-              } weighted guess average over ${player.getGamesPlayedCountByWeek(
+              } weighted ${player.getGamesPlayedCountByWeek(
         currentWeek
-      )} game${
-        player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
-      } played)</span>
+      )}-game average)</span>
             </span>
             </button>
             </h2>
@@ -368,7 +366,7 @@ const getPlayersAccordionHTML = () => {
                             : player.getWeightedGuessAverageAllTime()
                         } over ${player.results.length} game${
         player.results.length === 1 ? '' : 's'
-      } played</li>
+      }</li>
                         <li>Win Percentage: ${
                           String(player.getWinPercentageAllTime()).includes('.')
                             ? player.getWinPercentageAllTime().toFixed(2)
@@ -385,14 +383,10 @@ const getPlayersAccordionHTML = () => {
                         }
                         <li>Plays best on ${stringListify(
                           player.getBestDay().map((day) => day[0] + 's')
-                        )} (${player
-        .getBestDay()[0][1]
-        .toFixed(2)} weighted guess average)</li>
+                        )}</li>
                         <li>Doesn't play well on ${stringListify(
                                   player.getWorstDay().map((day) => day[0] + 's')
-                                )} (${player
-                        .getWorstDay()[0][1]
-                        .toFixed(2)} weighted guess average)</li>
+                                )}</li>
                     </ul>
                 </div>
             </div>
@@ -457,7 +451,7 @@ const getUseLessStatsHTML = () => {
         player.getWeightedAverageGuessByWeek(lastWeek),
         `weighted guess average over ${player.getGamesPlayedCountByWeek(lastWeek)} game${
           player.getGamesPlayedCountByWeek(lastWeek) === 1 ? '' : 's'
-        } played`,
+        }`,
       ]),
     'Last Week\'s Winner'
   );
