@@ -594,6 +594,43 @@ const lastUpdateUpdated = () => {
   lastUpdatedParagraph.innerText = `Last Update: ${lastUpdatedDate} (Wordle ${recentGame.id})`;
 };
 
+const generateAnswers = (res) => {
+  const playersArr = res["players"]
+  const gameIdStart = 315;
+  const gameStartDate = "04/30/2022";
+  const gameIdEnd = +playersArr[playersArr.length-1].split(' ')[2];
+  return [...Array(gameIdEnd + 1 - gameIdStart).keys()].map((key, index) => {
+    const date = new Date(gameStartDate)
+    date.setDate(date.getDate() + index)
+    return {id: gameIdStart + key, date: `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate()}/${date.getFullYear()}`}
+  });
+};
+
+const expandPlayers = (res) => {
+  const gameIds = {};
+  const players = {};
+
+  for(let player of res["players"]) {
+    const name = player[0];
+    const result = player.slice(2);
+    const gameId = result.split(" ")[1];
+    
+    if (gameIds[gameId] === undefined) {
+        gameIds[gameId] = 1 
+    } else {
+        gameIds[gameId] += 1
+    }
+    const postOrder = gameIds[gameId]
+    
+    if (players[name] !== undefined) {
+      players[name]['results'].push({ results: result, postOrder})
+    } else {
+      players[name] = { "results": [{ results: result, postOrder}] }
+    }
+  }
+  return players;
+}
+
 // MARK: FETCH DATA
 const fetchJSONData = async (targetJSONFilename) => {
   try {
@@ -606,9 +643,12 @@ const fetchJSONData = async (targetJSONFilename) => {
     console.log(error);
   }
 };
-fetchJSONData('somaek')
+fetchJSONData('somaek-new')
   .then((res) => {
-    data = res;
+    data = {
+      answers: generateAnswers(res),
+      players: expandPlayers(res)
+    };
   })
   .then(loadPlayers)
   .then(displayPlayers)
