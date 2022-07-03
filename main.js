@@ -256,6 +256,7 @@ const getPlayersAccordionHTML = () => {
   const currentWeek = Math.ceil(data.answers.length / 7);
   const playerAverageGuessByWeekSortedArr = players
     .map((player) => player.getWeightedAverageGuessByWeek(currentWeek))
+    .filter(score => !isNaN(score))
     .sort((a, b) => a - b);
   weekNumber.innerText = currentWeek;
   const weeklyWinners = [...Array(currentWeek - 1).keys()]
@@ -293,11 +294,16 @@ const getPlayersAccordionHTML = () => {
           {}
         );
     });
+
   return players
     .sort(
-      (a, b) =>
-        a.getWeightedAverageGuessByWeek(currentWeek) -
-        b.getWeightedAverageGuessByWeek(currentWeek)
+      (a, b) => {
+
+        const aG = isNaN(a.getWeightedAverageGuessByWeek(currentWeek)) ? 7 : a.getWeightedAverageGuessByWeek(currentWeek);
+        const bG = isNaN(b.getWeightedAverageGuessByWeek(currentWeek)) ? 7 : b.getWeightedAverageGuessByWeek(currentWeek);
+        return aG-bG;
+      }
+        
     )
     .map((player, index) => {
       const playerRank =
@@ -339,22 +345,31 @@ const getPlayersAccordionHTML = () => {
           return arr[0] + ', ' + stringListify(arr.slice(1));
         }
       };
+      const trueRank = playerRank !== 0 && adjustedPlayerRank !== -1 ? playerRank + adjustedPlayerRank : "Unranked";
+      console.log(player.name, trueRank)
+
       return `<div class='accordion-item'>
             <h2 class='accordion-header' id='heading${index}'>
             <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse${index}' aria-expanded='true' aria-controls='collapse${index}'>
             <span class='button-span-parent'>
               <span>${tiePreFix}${
-        playerRank + adjustedPlayerRank
+        trueRank
       }. ${player.name.toUpperCase()}</span>
-              <span class='rank-notes'>(${
-                String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
-                  ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
-                  : player.getWeightedAverageGuessByWeek(currentWeek)
-              } weighted guess average over ${player.getGamesPlayedCountByWeek(
-        currentWeek
-      )} game${
-        player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
-      } played)</span>
+             ${trueRank !== "Unranked" ? 
+            
+             `<span class='rank-notes'>(${
+              String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
+                ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
+                : player.getWeightedAverageGuessByWeek(currentWeek)
+            } weighted guess average over ${player.getGamesPlayedCountByWeek(
+      currentWeek
+    )} game${
+      player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
+    } played)</span>`
+
+          : `<span class='rank-notes'>(Has yet to play Wordle this week)</span>`
+            
+            }
             </span>
             </button>
             </h2>
