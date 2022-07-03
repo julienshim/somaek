@@ -346,8 +346,6 @@ const getPlayersAccordionHTML = () => {
         }
       };
       const trueRank = playerRank !== 0 && adjustedPlayerRank !== -1 ? playerRank + adjustedPlayerRank : "Unranked";
-      console.log(player.name, trueRank)
-
       return `<div class='accordion-item'>
             <h2 class='accordion-header' id='heading${index}'>
             <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse${index}' aria-expanded='true' aria-controls='collapse${index}'>
@@ -355,20 +353,17 @@ const getPlayersAccordionHTML = () => {
               <span>${tiePreFix}${
         trueRank
       }. ${player.name.toUpperCase()}</span>
-             ${trueRank !== "Unranked" ? 
-            
-             `<span class='rank-notes'>(${
-              String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
-                ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
-                : player.getWeightedAverageGuessByWeek(currentWeek)
-            } weighted guess average over ${player.getGamesPlayedCountByWeek(
-      currentWeek
-    )} game${
-      player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
-    } played)</span>`
-
-          : `<span class='rank-notes'>(Has yet to play Wordle this week)</span>`
-            
+             ${trueRank !== "Unranked" 
+             ? `<span class='rank-notes'>(${
+                String(player.getWeightedAverageGuessByWeek(currentWeek)).includes('.')
+                  ? player.getWeightedAverageGuessByWeek(currentWeek).toFixed(2)
+                  : player.getWeightedAverageGuessByWeek(currentWeek)
+                } weighted guess average over ${player.getGamesPlayedCountByWeek(
+                  currentWeek
+                )} game${
+                  player.getGamesPlayedCountByWeek(currentWeek) === 1 ? '' : 's'
+                } played)</span>`
+              : `<span class='rank-notes'>(Has yet to play Wordle this week)</span>`
             }
             </span>
             </button>
