@@ -298,9 +298,8 @@ const getPlayersAccordionHTML = () => {
   return players
     .sort(
       (a, b) => {
-
-        const aG = isNaN(a.getWeightedAverageGuessByWeek(currentWeek)) ? 7 : a.getWeightedAverageGuessByWeek(currentWeek);
-        const bG = isNaN(b.getWeightedAverageGuessByWeek(currentWeek)) ? 7 : b.getWeightedAverageGuessByWeek(currentWeek);
+        const aG = isNaN(a.getWeightedAverageGuessByWeek(currentWeek)) ? (7 / a.getGamesPlayedCountByWeek(weekNumber)) : a.getWeightedAverageGuessByWeek(currentWeek);
+        const bG = isNaN(b.getWeightedAverageGuessByWeek(currentWeek)) ? (7 / b.getGamesPlayedCountByWeek(weekNumber)) : b.getWeightedAverageGuessByWeek(currentWeek);
         return aG-bG;
       }
         
